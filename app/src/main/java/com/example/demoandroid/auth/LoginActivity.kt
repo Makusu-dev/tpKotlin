@@ -11,38 +11,44 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.demoandroid.R
-import com.example.demoandroid.article.ArticleActivity
 import com.example.demoandroid.ui.theme.EniTextField
 import com.example.demoandroid.ui.theme.EniLinkButton
+import com.example.demoandroid.ui.theme.EniSimpleButton
 import com.example.demoandroid.ui.theme.TemplatePage
 import com.example.demoandroid.ui.theme.TitlePage
 import com.example.demoandroid.ui.theme.WrapperPadding
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class LoginActivity : ComponentActivity() {
+    lateinit var authViewModel: MutableStateFlow<AuthViewModel>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        authViewModel = MutableStateFlow(AuthViewModel(email="isaac@gmail.com", password = "password"))
+
         setContent {
-            LoginPage()
+            LoginPage(authViewModel)
         }
     }
 }
 
 @Composable
-fun LoginPage() {
-    TemplatePage {
-        val listFields = mutableListOf(
-            "Email",
-            "Password"
-        )
+fun LoginPage(authViewModel: MutableStateFlow<AuthViewModel>) {
 
+        val authViewModelState by authViewModel.collectAsState()
+
+    TemplatePage {
         val context = LocalContext.current
 
         Column(modifier = Modifier.padding(20.dp).fillMaxWidth()) {
@@ -54,15 +60,31 @@ fun LoginPage() {
             Spacer(Modifier.height(100.dp))
             TitlePage("Login")
             Spacer(Modifier.height(20.dp))
-            for (el in listFields) {
-                WrapperPadding {
-                    EniTextField(hintText = el)
-                }
+
+            WrapperPadding {
+
+
+                EniTextField(hintText = "email",
+                    value=authViewModelState.email,
+                    onValueChange = {
+                        value -> authViewModel.value = authViewModel.value.copy(email = value)
+                    }
+                     )
             }
-            EniLinkButton(buttonText="Connexion",context, ArticleActivity::class)
+            WrapperPadding {
+                EniTextField(hintText = "password",
+                    value=authViewModelState.password,
+                    onValueChange = {
+                            value -> authViewModel.value = authViewModel.value.copy(password = value)
+                    } )
+            }
+
+            EniSimpleButton(buttonText = "Connexion") {
+                authViewModelState.login(context)
+            }
+//            EniLinkButton(buttonText="Connexion",context, ArticleActivity::class)
             EniLinkButton(buttonText="Inscription",context, SignInActivity::class)
             EniLinkButton(buttonText="Mot de passe oublié",context, ResetPasswordActivity::class)
-
         }
     }
 }
@@ -70,5 +92,7 @@ fun LoginPage() {
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    LoginPage()
+    val authViewModel = MutableStateFlow(AuthViewModel(email = "isaac@gmail.com", password = "password"))
+
+    LoginPage(authViewModel)
 }

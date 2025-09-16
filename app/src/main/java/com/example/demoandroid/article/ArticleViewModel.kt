@@ -2,8 +2,7 @@ package com.example.demoandroid.article
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.demoandroid.api.RetrofitTools.Companion.moshi
-import com.example.demoandroid.article.ArticleService
+import com.example.demoandroid.common.AppAlertHelpers
 import com.example.demoandroid.common.AppProgressHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +34,9 @@ class ArticleViewModel: ViewModel() {
             listeArticle.value= response.data!!
             //fermer un écran de chargement a la fin de l'appel async
             AppProgressHelper.get().close()
+
+            //afficher le message du back
+            AppAlertHelpers.get().show(response.message)
         }
 
     }

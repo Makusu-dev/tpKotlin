@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,10 +40,10 @@ import com.example.demoandroid.R
 import com.example.demoandroid.article.Article
 import com.example.demoandroid.article.ArticleActivity
 import com.example.demoandroid.article.ArticleDetailActivity
-import com.example.demoandroid.article.ArticleDetailPage
-import com.example.demoandroid.article.ArticleViewModel
+import com.example.demoandroid.common.AlertDialog
 import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.common.ProgressDialog
+
 import kotlin.reflect.KClass
 
 @Composable
@@ -66,6 +64,7 @@ fun TemplatePage(@DrawableRes backgroundId: Int = R.drawable.mobile_bg_01_1,cont
                 BackgroundImage(backgroundId)
                 content()
                 ProgressDialog()
+                AlertDialog()
             }
         }
     }
@@ -98,8 +97,8 @@ fun TitlePage(text: String = "Titre") {
 }
 // Composants de Formulaire
 @Composable
-fun EniTextField(hintText: String = "Veuillez saisir ...") {
-    TextField("", onValueChange = {},
+fun EniTextField(hintText: String = "Veuillez saisir ...", value: String, onValueChange: (String)-> Unit = {} ) {
+    TextField(value = value, onValueChange = onValueChange,
         colors = TextFieldDefaults.colors(focusedContainerColor = Color.White,
             unfocusedContainerColor = LightBlue,
             unfocusedIndicatorColor = Color.Transparent,
@@ -142,7 +141,7 @@ fun EniSimpleButton(buttonText: String, onclick: () -> Unit ){
 
 @Composable
 fun ArticleCard(article: Article){
-    val context = LocalContext.current;
+    val context = LocalContext.current
     Box(modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp)){
             ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                 Column {
@@ -176,7 +175,7 @@ fun ArticleCard(article: Article){
 
 @Composable
 fun ArticleCardDetail(article: Article){
-    val context = LocalContext.current;
+    val context = LocalContext.current
     Box(modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp)){
         ElevatedCard(modifier = Modifier.fillMaxWidth()) {
             Column {
