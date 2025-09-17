@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.demoandroid.article.ArticleActivity
+import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.ui.theme.EniTextField
 import com.example.demoandroid.ui.theme.EniSimpleButton
 import com.example.demoandroid.ui.theme.TemplatePage
@@ -107,7 +109,9 @@ fun SignInPage(authViewModel: MutableStateFlow<AuthViewModel>) {
                 )
             }
             EniSimpleButton(buttonText = "Sign In!") {
-                authViewModelState.signIn(context)
+                authViewModelState.signIn(onSigninSuccess = {
+                    AppContextHelper.openActivity(context, ArticleActivity::class)
+                })
             }
 //            EniLinkButton(buttonText = "Sign In!",context, LoginActivity::class)
         }

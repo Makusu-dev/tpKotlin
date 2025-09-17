@@ -21,6 +21,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
         <activity
             android:name="com.example.demoandroid.auth.SignInActivity"
@@ -36,9 +37,15 @@
             android:name="com.example.demoandroid.article.ArticleActivity"
             android:exported="true"
             android:theme="@style/Theme.DemoAndroid" >
+
         </activity>
         <activity
             android:name="com.example.demoandroid.article.ArticleDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DemoAndroid">
+        </activity>
+        <activity
+            android:name="com.example.demoandroid.article.ArticleEditActivity"
             android:exported="true"
             android:theme="@style/Theme.DemoAndroid" >
         </activity>

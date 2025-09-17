@@ -2,6 +2,11 @@ package com.example.demoandroid.common
 
 import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.viewModelScope
+import com.example.demoandroid.api.ApiResponse
+import com.example.demoandroid.article.ArticleService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class AppContextHelper {
@@ -17,6 +22,23 @@ class AppContextHelper {
             val intent = Intent(context,activityClass.java)
             intent.putExtra("id",extra)
             context.startActivity(intent)
+        }
+
+        fun <T> commonApiCall(loadingMsg : String = "chargement", coroutineScope: CoroutineScope, doAction: suspend () -> ApiResponse<T> ){
+
+            // Affiche un ecran de chargement avant un appel async
+            AppProgressHelper.get().show(loadingMsg)
+
+            coroutineScope.launch {
+                val response = doAction()
+
+                //fermer un écran de chargement a la fin de l'appel async
+                AppProgressHelper.get().close()
+
+                //afficher le message du back
+//            AppAlertHelpers.get().show(response.message)
+
+            }
         }
     }
 

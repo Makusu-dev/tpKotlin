@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.demoandroid.ui.theme.ArticleCard
@@ -35,8 +36,9 @@ class ArticleDetailActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         articleViewModel = ArticleViewModel();
-        var articleId = intent.getStringExtra("id")!!
-        articleViewModel.getArticleByIdFromApi(articleId);
+        var articleId = intent.getStringExtra("id")
+        articleViewModel.getArticleByIdFromApi(articleId!!);
+
         setContent {
             ArticleDetailPage(articleViewModel)
         }
@@ -45,6 +47,7 @@ class ArticleDetailActivity : ComponentActivity() {
 
 @Composable
 fun ArticleDetailPage(articleViewModel: ArticleViewModel){
+    val context = LocalContext.current
     // TemplatePage a un paramètre de type lambda-> unit on peux l'écrire directement entre accolades
     TemplatePage {
         val articleState by articleViewModel.article.collectAsState()
@@ -56,7 +59,9 @@ fun ArticleDetailPage(articleViewModel: ArticleViewModel){
             Column {
 
             }
-            ArticleCardDetail(articleState)
+            ArticleCardDetail(articleState, onRequestDelete = {
+                articleViewModel.deleteArticle(context,articleState.id!!);
+            })
         }
     }
 }

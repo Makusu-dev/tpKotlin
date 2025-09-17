@@ -16,7 +16,7 @@ data class AuthViewModel(var email: String="",var pseudo: String="", var passwor
 //    var userToLogin = MutableStateFlow<UserModelData>(UserModelData("isaac@gmail.com","password"));
 
 
-    fun login(context: Context) {
+    fun login(onLoginSuccess: () -> Unit= {}) {
         AppProgressHelper.get().show("Connexion en cours")
         viewModelScope.launch {
             //a suprimer lorsque l'on liera aux champs
@@ -37,7 +37,7 @@ data class AuthViewModel(var email: String="",var pseudo: String="", var passwor
             AppAlertHelpers.get().show(response.message, onClose = {
                 // Si Code success alors ouvrir la page list article
                 if (response.code=="200"){
-                    AppContextHelper.openActivity(context, ArticleActivity::class)
+                    onLoginSuccess()
                 }
             })
 
@@ -45,7 +45,7 @@ data class AuthViewModel(var email: String="",var pseudo: String="", var passwor
         }
     }
 
-    fun signIn(context: Context) {
+    fun signIn(onSigninSuccess: () -> Unit={}) {
 
         AppProgressHelper.get().show("Connexion en cours")
         viewModelScope.launch {
@@ -56,7 +56,7 @@ data class AuthViewModel(var email: String="",var pseudo: String="", var passwor
 
             AppAlertHelpers.get().show(response.message, onClose = {
                 if(response.code=="200") {
-                    AppContextHelper.openActivity(context, ArticleActivity::class)
+                    onSigninSuccess()
                 }
             })
 
@@ -64,7 +64,7 @@ data class AuthViewModel(var email: String="",var pseudo: String="", var passwor
         }
     }
 
-    fun recoverPassword(context: Context){
+    fun recoverPassword(onRecoverSuccess: ()-> Unit={}){
 
         AppProgressHelper.Companion.get().show(message = "chargement")
         viewModelScope.launch {
@@ -76,7 +76,7 @@ data class AuthViewModel(var email: String="",var pseudo: String="", var passwor
                 if (response.code=="200"){
                     // ATTENTION TEST DE LA FONCTION, MOT DE PASSE AFFICHE EN CLAIR
                     AppAlertHelpers.Companion.get().show("Bonjour "+email+". Votre nouveau mot de passe est: " + response.data, onClose = {
-                        AppContextHelper.openActivity(context, LoginActivity::class)
+                      onRecoverSuccess
                     })
                 }
             })

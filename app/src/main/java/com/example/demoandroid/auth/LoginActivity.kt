@@ -16,9 +16,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.demoandroid.R
+import com.example.demoandroid.article.ArticleActivity
+import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.ui.theme.EniTextField
 import com.example.demoandroid.ui.theme.EniLinkButton
 import com.example.demoandroid.ui.theme.EniSimpleButton
@@ -64,7 +67,7 @@ fun LoginPage(authViewModel: MutableStateFlow<AuthViewModel>) {
             WrapperPadding {
 
 
-                EniTextField(hintText = "email",
+                EniTextField(hintText = stringResource(R.string.field_email_hint),
                     value=authViewModelState.email,
                     onValueChange = {
                         value -> authViewModel.value = authViewModel.value.copy(email = value)
@@ -79,8 +82,10 @@ fun LoginPage(authViewModel: MutableStateFlow<AuthViewModel>) {
                     } )
             }
 
-            EniSimpleButton(buttonText = "Connexion") {
-                authViewModelState.login(context)
+            EniSimpleButton(buttonText = stringResource(R.string.login_btn)) {
+                authViewModelState.login(onLoginSuccess = {
+                    AppContextHelper.openActivity(context, ArticleActivity::class)
+                })
             }
 //            EniLinkButton(buttonText="Connexion",context, ArticleActivity::class)
             EniLinkButton(buttonText="Inscription",context, SignInActivity::class)

@@ -46,15 +46,17 @@ class ArticleActivity : ComponentActivity() {
 
         articleViewModel = ArticleViewModel();
 
-
+        articleViewModel.getArticlesFromApi();
         setContent {
             ArticlePage(articleViewModel)
         }
+
     }
 }
 
 @Composable
 fun ArticlePage(articleViewModel: ArticleViewModel){
+    val context=LocalContext.current;
     //on écoute is Loading
     val isLoadingState by articleViewModel.isLoading.collectAsState()
     // TemplatePage a un paramètre de type lambda-> unit on peux l'écrire directement entre accolades
@@ -67,13 +69,14 @@ fun ArticlePage(articleViewModel: ArticleViewModel){
 //                //incrémenter
 //                articleViewModel.wipeArticles();
 //            })
-            EniSimpleButton(buttonText = "Charger les articles",onclick = {
-                //Recharger la liste des articles
-                articleViewModel.getArticlesFromApi();
-            })
+//            EniSimpleButton(buttonText = "Charger les articles",onclick = {
+//                //Recharger la liste des articles
+//                articleViewModel.getArticlesFromApi();
+//            })
             EniSimpleButton(buttonText = "Ajouter un article",onclick = {
                 //incrémenter
-                articleViewModel.addArticle();
+//                articleViewModel.addArticle();
+                AppContextHelper.openActivity(context, ArticleEditActivity::class)
             })
             ArticleListView(articleViewModel)
         }
@@ -88,7 +91,7 @@ fun ArticleListView(articleViewModel: ArticleViewModel) {
         .padding(20.dp)
         .fillMaxWidth()) {
         items(articleListState) { article ->
-            ArticleCard(article)
+            ArticleCard(article,articleViewModel)
 
         }
     }

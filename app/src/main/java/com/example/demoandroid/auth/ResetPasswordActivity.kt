@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.ui.theme.EniTextField
 import com.example.demoandroid.ui.theme.EniSimpleButton
 import com.example.demoandroid.ui.theme.TemplatePage
@@ -52,7 +53,9 @@ fun PasswordRecoverPage(authViewModel: MutableStateFlow<AuthViewModel>) {
                 )
             }
             EniSimpleButton(buttonText = "Get new password") {
-                authViewModelState.recoverPassword(context)
+                authViewModelState.recoverPassword(onRecoverSuccess = {
+                    AppContextHelper.openActivity(context, LoginActivity::class)
+                })
             }
 //            EniLinkButton(buttonText = "Envoyer le lien de récupération",context, ArticleActivity::class)
 

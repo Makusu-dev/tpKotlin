@@ -40,6 +40,8 @@ import com.example.demoandroid.R
 import com.example.demoandroid.article.Article
 import com.example.demoandroid.article.ArticleActivity
 import com.example.demoandroid.article.ArticleDetailActivity
+import com.example.demoandroid.article.ArticleEditActivity
+import com.example.demoandroid.article.ArticleViewModel
 import com.example.demoandroid.common.AlertDialog
 import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.common.ProgressDialog
@@ -140,7 +142,7 @@ fun EniSimpleButton(buttonText: String, onclick: () -> Unit ){
 }
 
 @Composable
-fun ArticleCard(article: Article){
+fun ArticleCard(article: Article, articleViewModel: ArticleViewModel){
     val context = LocalContext.current
     Box(modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp)){
             ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -156,8 +158,15 @@ fun ArticleCard(article: Article){
                             Text(modifier = Modifier.padding(10.dp),text=article.title, fontWeight = FontWeight.Bold)
                             Text(modifier = Modifier.padding(10.dp),text=article.desc)
                             EniSimpleButton("Détail", {
-                                AppContextHelper.openActivityWithExtra(context, ArticleDetailActivity::class,article.id)
+                                AppContextHelper.openActivityWithExtra(context, ArticleDetailActivity::class,article.id!!)
                             })
+                            EniSimpleButton("Modifier", {
+                                AppContextHelper.openActivityWithExtra(context, ArticleEditActivity::class,article.id!!)
+                            })
+//                            EniSimpleButton("Supprimer", {
+//                                articleViewModel.deleteArticle(context)
+//                            })
+                        }
                         }
                     }
                     Box( modifier = Modifier.background( brush = Brush.linearGradient(
@@ -170,20 +179,21 @@ fun ArticleCard(article: Article){
                 }
             }
     }
-}
+
 
 
 @Composable
-fun ArticleCardDetail(article: Article){
+fun ArticleCardDetail(article: Article, onRequestDelete: (id: String) -> Unit = {} ){
     val context = LocalContext.current
     Box(modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp)){
         ElevatedCard(modifier = Modifier.fillMaxWidth()) {
             Column {
                     AsyncImage(
+                        //Le placeholder peux écraser le texte. A corriger
                         placeholder = painterResource(R.drawable.article_placeholder),
                         model = article.imgPath,
                         contentDescription = null,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.size(100.dp)
                     )
                     Column(modifier = Modifier.padding(10.dp)) {
                         Text(modifier = Modifier.padding(10.dp),text=article.title, fontWeight = FontWeight.Bold)
@@ -191,6 +201,13 @@ fun ArticleCardDetail(article: Article){
                         EniSimpleButton("Retour", {
                             AppContextHelper.openActivity(context, ArticleActivity::class)
                         })
+                        EniSimpleButton("Supprimer",
+
+                            {
+                                onRequestDelete(article.id!!)
+                            }
+
+                        )
                     }
                 Box( modifier = Modifier.background( brush = Brush.linearGradient(
                     listOf(Color(0xFF0b58d8), Color(0xFF31a9ff))

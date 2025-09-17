@@ -1,8 +1,12 @@
 package com.example.demoandroid.article
 
 import com.example.demoandroid.api.ApiResponse
+import com.example.demoandroid.api.ApiResponseWithId
 import com.example.demoandroid.api.RetrofitTools
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ArticleService {
@@ -12,6 +16,13 @@ interface ArticleService {
 
     @GET("/articles/{id}")
     suspend fun getArticleById(@Path("id") id: String): ApiResponse<Article>
+
+    @POST("/articles/save/")
+    suspend fun saveArticle(@Body article: Article): ApiResponse<Article>
+
+    @DELETE("/articles/{id}")
+    suspend fun deleteArticleById(@Path("id") id: String): ApiResponse<Article>
+
 
 
     object ArticleServiceApi {
