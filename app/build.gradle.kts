@@ -63,6 +63,7 @@ dependencies {
     // Ok HTTP
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -39,8 +39,7 @@ import coil.compose.AsyncImage
 import com.example.demoandroid.R
 import com.example.demoandroid.article.Article
 import com.example.demoandroid.article.ArticleActivity
-import com.example.demoandroid.article.ArticleDetailActivity
-import com.example.demoandroid.article.ArticleEditActivity
+import com.example.demoandroid.article.ArticleListener
 import com.example.demoandroid.article.ArticleViewModel
 import com.example.demoandroid.common.AlertDialog
 import com.example.demoandroid.common.AppContextHelper
@@ -142,7 +141,7 @@ fun EniSimpleButton(buttonText: String, onclick: () -> Unit ){
 }
 
 @Composable
-fun ArticleCard(article: Article, articleViewModel: ArticleViewModel){
+fun ArticleCard(article: Article, articleListener: ArticleListener){
     val context = LocalContext.current
     Box(modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp)){
             ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -158,14 +157,14 @@ fun ArticleCard(article: Article, articleViewModel: ArticleViewModel){
                             Text(modifier = Modifier.padding(10.dp),text=article.title, fontWeight = FontWeight.Bold)
                             Text(modifier = Modifier.padding(10.dp),text=article.desc)
                             EniSimpleButton("Détail", {
-                                AppContextHelper.openActivityWithExtra(context, ArticleDetailActivity::class,article.id!!)
+                                articleListener.onRequestView(article)
                             })
                             EniSimpleButton("Modifier", {
-                                AppContextHelper.openActivityWithExtra(context, ArticleEditActivity::class,article.id!!)
+                                articleListener.onRequestEdit(article)
                             })
-//                            EniSimpleButton("Supprimer", {
-//                                articleViewModel.deleteArticle(context)
-//                            })
+                            EniSimpleButton("Supprimer", {
+                                articleListener.onRequestDelete(article)
+                            })
                         }
                         }
                     }
@@ -183,7 +182,7 @@ fun ArticleCard(article: Article, articleViewModel: ArticleViewModel){
 
 
 @Composable
-fun ArticleCardDetail(article: Article, onRequestDelete: (id: String) -> Unit = {} ){
+fun ArticleCardDetail(article: Article, onRequestDelete: (id: String) -> Unit = {} , articleListener: ArticleListener){
     val context = LocalContext.current
     Box(modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp)){
         ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -204,7 +203,7 @@ fun ArticleCardDetail(article: Article, onRequestDelete: (id: String) -> Unit = 
                         EniSimpleButton("Supprimer",
 
                             {
-                                onRequestDelete(article.id!!)
+                                articleListener.onRequestDelete(article)
                             }
 
                         )

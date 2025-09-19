@@ -7,8 +7,14 @@ import com.example.demoandroid.common.AppContextHelper.Companion.commonApiCall
 import com.example.demoandroid.common.ENIViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
+class ArticleListener(var onRequestView : (article: Article)-> Unit,
+                      var onRequestEdit : (article: Article)-> Unit,
+                      var onRequestDelete : (article: Article)-> Unit,) {
+}
 class ArticleViewModel(application: Application): ENIViewModel(application) {
     var isLoading = MutableStateFlow<Boolean>(false)
+
+    var articleListener: ArticleListener? = null;
 
     var article = MutableStateFlow<Article>(Article("","","","",""))
 
