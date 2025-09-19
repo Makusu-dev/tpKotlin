@@ -1,5 +1,6 @@
 package com.example.demoandroid.article
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -38,7 +39,7 @@ class ArticleEditActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        articleViewModel = ArticleViewModel();
+        articleViewModel = ArticleViewModel(application);
         var articleId: String? = intent.getStringExtra("id")
         if(articleId!=null){
             articleViewModel.getArticleByIdFromApi(articleId);
@@ -96,7 +97,7 @@ fun ArticleEditPage(articleViewModel: ArticleViewModel){
 //                }
             }
             EniSimpleButton("Enregistrer", {
-                articleViewModel.saveArticle(onLoginSuccess = {
+                articleViewModel.saveArticle(onSaveSuccess = {
                     AppContextHelper.openActivity(context, ArticleActivity::class)
                 })
             })
@@ -112,5 +113,5 @@ fun ArticleEditPage(articleViewModel: ArticleViewModel){
 @Preview(showBackground = true)
 @Composable
 fun ArticleEditPreview() {
-    ArticleEditPage(ArticleViewModel())
+    ArticleEditPage(ArticleViewModel(Application()))
 }

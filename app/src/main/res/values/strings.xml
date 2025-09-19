@@ -1,6 +1,27 @@
 <resources>
+    <!--Main-->
     <string name="app_name">DemoAndroid</string>
     <string name="title_activity_main">MainActivity</string>
+    <!--Fields-->
     <string name="field_email_hint">Email</string>
-    <string name="login_btn">Login</string>
+    <string name="field_password_hint">Password</string>
+    <string name="field_confirmPassword_hint">Confirm password</string>
+    <string name="field_cityCode_hint">City Code</string>
+    <string name="field_city_hint">City</string>
+    <string name="field_phone_hint">Phone number</string>
+
+
+
+    <!--Button-->
+    <string name="btn_login">Login</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_link_signIn">Sign In</string>
+    <string name="btn_signIn">Sign In!</string>
+    <string name="btn_link_recoverPassword">Recover password</string>
+    <string name="btn_recoverPassword">Get new password</string>
+
+    <!--Api messages-->
+    <string name="api_articles">"Chargement des articles"</string>
+
+
 </resources>

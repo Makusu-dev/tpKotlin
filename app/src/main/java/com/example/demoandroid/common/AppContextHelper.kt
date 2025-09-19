@@ -24,7 +24,7 @@ class AppContextHelper {
             context.startActivity(intent)
         }
 
-        fun <T> commonApiCall(loadingMsg : String = "chargement", coroutineScope: CoroutineScope, doAction: suspend () -> ApiResponse<T> ){
+        fun <T> commonApiCall(loadingMsg : String = "chargement", coroutineScope: CoroutineScope, doAction: suspend () -> ApiResponse<T>, onSuccess: (ApiResponse<T>) -> Unit= {} ){
 
             // Affiche un ecran de chargement avant un appel async
             AppProgressHelper.get().show(loadingMsg)
@@ -35,8 +35,12 @@ class AppContextHelper {
                 //fermer un écran de chargement a la fin de l'appel async
                 AppProgressHelper.get().close()
 
-                //afficher le message du back
-//            AppAlertHelpers.get().show(response.message)
+                //On affiche le message du back
+                AppAlertHelpers.Companion.get().show(response.message, onClose = {
+                    if (response.code == "200") {
+                        {onSuccess(response)}
+                    }
+                })
 
             }
         }

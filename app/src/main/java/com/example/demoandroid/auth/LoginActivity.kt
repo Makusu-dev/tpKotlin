@@ -1,5 +1,6 @@
 package com.example.demoandroid.auth
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.demoandroid.R
 import com.example.demoandroid.article.ArticleActivity
+import com.example.demoandroid.common.AppAlertHelpers
 import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.ui.theme.EniTextField
 import com.example.demoandroid.ui.theme.EniLinkButton
@@ -38,7 +40,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        authViewModel = MutableStateFlow(AuthViewModel(email="isaac@gmail.com", password = "password"))
+        authViewModel = MutableStateFlow(AuthViewModel(application,email="isaac@gmail.com", password = "password"))
 
         setContent {
             LoginPage(authViewModel)
@@ -75,21 +77,20 @@ fun LoginPage(authViewModel: MutableStateFlow<AuthViewModel>) {
                      )
             }
             WrapperPadding {
-                EniTextField(hintText = "password",
+                EniTextField(hintText = stringResource(R.string.field_password_hint),
                     value=authViewModelState.password,
                     onValueChange = {
                             value -> authViewModel.value = authViewModel.value.copy(password = value)
                     } )
             }
-
-            EniSimpleButton(buttonText = stringResource(R.string.login_btn)) {
+            EniSimpleButton(buttonText = stringResource(R.string.btn_login)) {
                 authViewModelState.login(onLoginSuccess = {
                     AppContextHelper.openActivity(context, ArticleActivity::class)
                 })
             }
 //            EniLinkButton(buttonText="Connexion",context, ArticleActivity::class)
-            EniLinkButton(buttonText="Inscription",context, SignInActivity::class)
-            EniLinkButton(buttonText="Mot de passe oublié",context, ResetPasswordActivity::class)
+            EniLinkButton(buttonText=stringResource(R.string.btn_link_signIn),context, SignInActivity::class)
+            EniLinkButton(buttonText=stringResource(R.string.btn_link_recoverPassword),context, ResetPasswordActivity::class)
         }
     }
 }
@@ -97,7 +98,7 @@ fun LoginPage(authViewModel: MutableStateFlow<AuthViewModel>) {
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    val authViewModel = MutableStateFlow(AuthViewModel(email = "isaac@gmail.com", password = "password"))
+    val authViewModel = MutableStateFlow(AuthViewModel(Application(), email = "isaac@gmail.com", password = "password"))
 
     LoginPage(authViewModel)
 }

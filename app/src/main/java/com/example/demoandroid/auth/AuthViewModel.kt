@@ -1,71 +1,44 @@
 package com.example.demoandroid.auth
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
+
 import androidx.lifecycle.viewModelScope
-import com.example.demoandroid.article.ArticleActivity
 import com.example.demoandroid.common.AppAlertHelpers
-import com.example.demoandroid.common.AppContextHelper
+import com.example.demoandroid.common.AppContextHelper.Companion.commonApiCall
 import com.example.demoandroid.common.AppProgressHelper
+import com.example.demoandroid.common.ENIViewModel
 import kotlinx.coroutines.launch
+import android.app.Application
 
 
-data class AuthViewModel(var email: String="",var pseudo: String="", var password: String="",var passwordConfirm: String="", var cityCode: String="", var city: String="", var phone: String="" ): ViewModel() {
+data class AuthViewModel(val _application: Application,var email: String="",var pseudo: String="", var password: String="",var passwordConfirm: String="", var cityCode: String="", var city: String="", var phone: String="" ): ENIViewModel(_application) {
 
     //Ne semble pas fonctionner
 //    var userToLogin = MutableStateFlow<UserModelData>(UserModelData("isaac@gmail.com","password"));
 
 
     fun login(onLoginSuccess: () -> Unit= {}) {
-        AppProgressHelper.get().show("Connexion en cours")
-        viewModelScope.launch {
-            //a suprimer lorsque l'on liera aux champs
-//            val userToLogin = UserModelData("isaac@gmail.com","password")
-
+        commonApiCall<String>("Connexion en cours",viewModelScope,doAction={
             val userLogin= UserModelData(email,password)
             val response = AuthService.AuthServiceApi.authService.login(userLogin)
-
-
-            //fermer un écran de chargement a la fin de l'appel async
-            AppProgressHelper.get().close()
-
             if(response.code=="200"){
                 AuthContext.Companion.get().setAuthToken(response.data!!)
-            }
-
-            //afficher le message du back
-            AppAlertHelpers.get().show(response.message, onClose = {
-                // Si Code success alors ouvrir la page list article
-                if (response.code=="200"){
-                    onLoginSuccess()
-                }
-            })
-
-
-        }
+            };
+            response;}, onSuccess = onLoginSuccess
+        )
     }
 
     fun signIn(onSigninSuccess: () -> Unit={}) {
-
-        AppProgressHelper.get().show("Connexion en cours")
-        viewModelScope.launch {
+        commonApiCall<SignUpResponse>("Connexion en cours",viewModelScope,doAction={
             val userToSignIn = SignupRequest(email=email, pseudo = pseudo,password = password, passwordConfirm=passwordConfirm,cityCode=cityCode,city=city,phone= phone)
             val response = AuthService.AuthServiceApi.authService.signup(userToSignIn)
-
-            AppProgressHelper.get().close()
-
-            AppAlertHelpers.get().show(response.message, onClose = {
-                if(response.code=="200") {
-                    onSigninSuccess()
-                }
-            })
-
-
-        }
+            response;
+            },
+            onSuccess = onSigninSuccess
+        )
     }
 
+    //Non refactorisé pour le moment car le comportement après succès est plus complexe
     fun recoverPassword(onRecoverSuccess: ()-> Unit={}){
-
         AppProgressHelper.Companion.get().show(message = "chargement")
         viewModelScope.launch {
             val userWithMail = UserModelData(email= email,password="")
@@ -81,6 +54,5 @@ data class AuthViewModel(var email: String="",var pseudo: String="", var passwor
                 }
             })
         }
-
     }
 }

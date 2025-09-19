@@ -1,5 +1,6 @@
 package com.example.demoandroid.auth
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,8 +13,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.demoandroid.R
 import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.ui.theme.EniTextField
 import com.example.demoandroid.ui.theme.EniSimpleButton
@@ -29,7 +32,7 @@ class ResetPasswordActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        authViewModel = MutableStateFlow(AuthViewModel())
+        authViewModel = MutableStateFlow(AuthViewModel(application))
 
         setContent {
             PasswordRecoverPage(authViewModel)
@@ -45,14 +48,14 @@ fun PasswordRecoverPage(authViewModel: MutableStateFlow<AuthViewModel>) {
     TemplatePage {
         Column(modifier = Modifier.padding(30.dp).padding(top = 180.dp).fillMaxSize()) {
             WrapperPadding {
-                EniTextField(hintText = "email",
+                EniTextField(hintText = stringResource(R.string.field_email_hint),
                     value=authViewModelState.email,
                     onValueChange = {
                             value -> authViewModel.value = authViewModel.value.copy(email = value)
                     }
                 )
             }
-            EniSimpleButton(buttonText = "Get new password") {
+            EniSimpleButton(buttonText = stringResource(R.string.btn_recoverPassword)) {
                 authViewModelState.recoverPassword(onRecoverSuccess = {
                     AppContextHelper.openActivity(context, LoginActivity::class)
                 })
@@ -66,6 +69,6 @@ fun PasswordRecoverPage(authViewModel: MutableStateFlow<AuthViewModel>) {
 @Preview(showBackground = true)
 @Composable
 fun ResetPreview() {
-    val authViewModel = MutableStateFlow(AuthViewModel())
+    val authViewModel = MutableStateFlow(AuthViewModel(Application()))
     PasswordRecoverPage(authViewModel)
 }

@@ -1,5 +1,6 @@
 package com.example.demoandroid.article
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.demoandroid.common.AppContextHelper
 import com.example.demoandroid.ui.theme.ArticleCard
 import com.example.demoandroid.ui.theme.ArticleCardDetail
 import com.example.demoandroid.ui.theme.EniSimpleButton
@@ -35,7 +37,7 @@ class ArticleDetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        articleViewModel = ArticleViewModel();
+        articleViewModel = ArticleViewModel(application);
         var articleId = intent.getStringExtra("id")
         articleViewModel.getArticleByIdFromApi(articleId!!);
 
@@ -60,7 +62,9 @@ fun ArticleDetailPage(articleViewModel: ArticleViewModel){
 
             }
             ArticleCardDetail(articleState, onRequestDelete = {
-                articleViewModel.deleteArticle(context,articleState.id!!);
+                articleViewModel.deleteArticle(articleState.id!!, onDeleteSuccess = {
+                    AppContextHelper.openActivity(context, ArticleActivity::class);
+                });
             })
         }
     }
@@ -69,5 +73,5 @@ fun ArticleDetailPage(articleViewModel: ArticleViewModel){
 @Preview(showBackground = true)
 @Composable
 fun ArticleDetailPreview() {
-    ArticleDetailPage(ArticleViewModel())
+    ArticleDetailPage(ArticleViewModel(Application()))
 }

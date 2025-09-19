@@ -1,5 +1,6 @@
 package com.example.demoandroid.article
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -44,7 +45,7 @@ class ArticleActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        articleViewModel = ArticleViewModel();
+        articleViewModel = ArticleViewModel(application);
 
         articleViewModel.getArticlesFromApi();
         setContent {
@@ -100,5 +101,5 @@ fun ArticleListView(articleViewModel: ArticleViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun ArticlePreview() {
-    ArticlePage(ArticleViewModel())
+    ArticlePage(ArticleViewModel(Application()))
 }
